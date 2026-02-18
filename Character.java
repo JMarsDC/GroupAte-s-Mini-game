@@ -1,12 +1,18 @@
 public class Character{
     private int health;
     private int mana;
-    private int attackDMG; //this shi is randomized
+    private int attackDMG;
+    private String name;
 
-    Character(int health, int mana, int attackDMG){
+    Character(String name, int health, int mana, int attackDMG){
+        this.name = name;
         this.health = health;
         this.mana = mana;
         this.attackDMG = attackDMG;
+    }
+
+    public String getName(){
+        return name;
     }
 
     void takeDamage(int damage){
