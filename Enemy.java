@@ -1,14 +1,14 @@
 public class Enemy extends Character implements Voicelines{
     
-    private int Level;
+    private float Level;
 
-    Enemy(String name, int health, int mana, int attackDMG, int Level){
+    Enemy(String name, int health, int mana, int attackDMG, float Level){
         super(name,health,mana,attackDMG);
         this.Level = Level;
     }
 
 // Drops Level so player gets more buffed
-    public int giveLevel(){
+    public float giveLevel(){
         return Level;
     }
 
