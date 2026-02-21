@@ -2,7 +2,7 @@ public class Enemy extends Character implements Voicelines{
     
     private float Level;
 
-    Enemy(String name, int health, int mana, int attackDMG, float Level){
+     Enemy(String name, int health, int mana, int attackDMG, float Level){
         super(name,health,mana,attackDMG);
         this.Level = Level;
     }
