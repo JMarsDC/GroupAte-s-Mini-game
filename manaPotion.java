@@ -1,0 +1,13 @@
+public class manaPotion extends Potion{
+    private int manaAmount;
+
+    public manaPotion(int manaAmount){
+        super("Mana Potion");
+        this.manaAmount = manaAmount;
+    }
+
+    @Override
+    public void applyEffect(Character character) {
+        character.increaseMana(manaAmount);
+    }
+}

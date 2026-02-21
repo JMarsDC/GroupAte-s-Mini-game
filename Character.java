@@ -31,6 +31,14 @@ public class Character{
         return attackDMG;
     }
 
+    public void increaseHealth(int amount){ health += amount; }
+
+    public void increaseMana(int amount) { mana += amount; }
+
+    public void increaseDMG(int amount) { attackDMG += amount; }
+
+    public void usePotion(Potion potion) { potion.applyEffect(this); }
+
     public boolean isAlive(){
         return health>0;
     }
