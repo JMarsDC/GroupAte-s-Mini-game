@@ -1,8 +1,8 @@
 public class manaPotion extends Potion{
     private int manaAmount;
 
-    public manaPotion(int manaAmount){
-        super("Mana Potion");
+    public manaPotion(int manaAmount, double dropRate){
+        super("Mana Potion", dropRate);
         this.manaAmount = manaAmount;
     }
 
