@@ -4,6 +4,7 @@ public class Character{
     private int attackDMG;
     private String name;
 
+    Character(){}
     Character(String name, int health, int mana, int attackDMG){
         this.name = name;
         this.health = health;
@@ -14,6 +15,8 @@ public class Character{
     public String getName(){
         return name;
     }
+
+    public void setName(String name){ this.name = name; }
 
     void takeDamage(int damage){
         health -= damage;

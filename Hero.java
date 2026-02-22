@@ -34,4 +34,8 @@ private int Level = 1; //plus 0.1 guro IDK
         System.out.print("Hola espanyol?");
     }
 
+    public void recover(){
+        super.increaseHealth(50);
+        super.increaseMana(50);
+    }
 }
