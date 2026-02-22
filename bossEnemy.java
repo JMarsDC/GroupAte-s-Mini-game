@@ -1,14 +1,21 @@
 public class bossEnemy extends Enemy implements Voicelines{
 
     private int phaseCount;
+    static int health = 200;
+    static int mana = 80;
+    static int attackDMG = 20;
+    static int level = 5;
 
-    public bossEnemy(String name, int health, int mana, int attackDMG, float Level) {
+    /*  bossEnemy(String name, int health, int mana, int attackDMG, float Level) {
         super(name, health, mana, attackDMG, Level);
         this.phaseCount = phaseCount;
-    }
+    } */
 
-    public void nextPhase(){
-        if (phaseCount > 1){
+    //gi tapol nakog add via gameLogic ari nalang nako ilisan type shi
+    bossEnemy(){ super("BOSSBABAJI", health, mana, attackDMG, level);}
+
+    public void nextPhase() {
+        if (phaseCount > 1) {
             System.out.println(getName() + " enters phase " + phaseCount + "!");
             phaseCount--;
         } else

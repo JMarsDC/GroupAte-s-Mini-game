@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class GameLogic {
 
+    private int totalEnemiesDefeated = 0;
     private int stepsTaken = 0;
     private int totalSteps = 0;
     private Random random = new Random();
@@ -20,6 +21,7 @@ public class GameLogic {
         System.out.println("1. Swordsman");
         System.out.println("2. Ranger");
         System.out.println("3. Barbarian");
+        System.out.println("4. Saitama (dakog tama)");
 
         int chc = sc.nextInt();
 
@@ -39,10 +41,16 @@ public class GameLogic {
                 player = new Hero(playerName, 300, 50, 50);
                 weapon = "war axe";
                 break;
+            case 4:
+                player = new Hero(playerName, 9999999, 9999999, 9999999);
+                weapon = "kumo";
+                break;
         }
 
         System.out.println("\nWelcome to [placeholder], " + playerName + "!");
         System.out.println("You wield a " + weapon + " as your weapon.");
+
+        gameLoop(player, sc);
     }
     public void gameLoop(Hero player, Scanner sc){
         boolean isRunning = true;
@@ -65,8 +73,11 @@ public class GameLogic {
                 case 5:
                     System.out.println("You choose to rest! You have restored some hp and mana.");
                     player.recover();
+                    break;
                 case 6:
                     System.out.println("You leave the adventure..");
+                    quitMessage(player);
+                    isRunning = false;
             }
         }
     }
@@ -81,6 +92,8 @@ public class GameLogic {
         if(stepsTaken >= bossEncounter && roll < 30){
             System.out.println("!!! A BOSS APPEARS !!!");
             resetBossEncounter();
+            bossEnemy bossBabaji = new bossEnemy();
+            bossBabajiCombat(player, bossBabaji);
             return;
         }
 
@@ -112,30 +125,52 @@ public class GameLogic {
         boolean inCombat = true;
         System.out.println("--- Combat Started! ---");
 
-        while(inCombat){
-            System.out.println("Your HP: " + player.getHealth() + "Your Mana: " + player.getMana());
+        while(inCombat) {
+            System.out.println("Your HP: " + player.getHealth() + "\nYour Mana: " + player.getMana());
             System.out.println("What will you do? ");
             System.out.println("1. Attack\n2. Use Potion\n3. Flee");
             int chc = sc.nextInt();
 
-            switch(chc){
+            switch (chc) {
                 case 1:
                     System.out.println("You strike the enemy with your " + weapon);
                     enemy.takeDamage(player.getAttack());
+                    System.out.println(enemy.getName() + " takes " + player.getAttack() + " damage!");
+                    if (!enemy.isAlive()) {
+                        System.out.println("You have defeated the enemy!");
+                        System.out.println("You have gained a level!");
+                        totalEnemiesDefeated++;
+                        inCombat = false;
+                        break;
+                    } else {
+                        System.out.println(enemy.getName() + " attacks you for " + enemy.getAttack() + "!");
+                        player.takeDamage(enemy.getAttack());
+                    }
                     break;
                 case 2:
                     System.out.println("You used a potion! Recovering both your mana and hp!");
+                    System.out.println(enemy.getName() + " attacks you for " + enemy.getAttack() + "!");
+                    player.takeDamage(enemy.getAttack());
                     break;
                 case 3:
                     System.out.println("You run!");
+                    System.out.println("\n--- Combat Ended ---");
                     inCombat = false;
                     break;
             }
-
-            System.out.println(enemy.getName() + " attacks you for " + enemy.getAttack() + "!");
-            player.takeDamage(enemy.getAttack());
-
         }
-        System.out.println("--- Combat Ended ---");
+    }
+    public void quitMessage(Hero player){
+        System.out.println("--- Adventure Ended ---");
+        System.out.println("      Statistics");
+        System.out.println("Player Name: " + player.getName());
+        System.out.println("Total Steps Taken: " + totalSteps);
+        System.out.println("Player Level: " + player.getLevel());
+        System.out.println("Enemies Defeated: " + totalEnemiesDefeated);
+        System.out.println("\nThank you for playing this experience!");
+    }
+
+    public void bossBabajiCombat(Hero player, bossEnemy bossBabaji){
+
     }
 }
