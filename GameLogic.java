@@ -30,15 +30,15 @@ public class GameLogic {
 
         switch(chc){
             case 1:
-                player = new Hero(playerName, 200, 85, 70);
+                player = new Hero(playerName, 200, 40, 18);
                 weapon = "sword";
                 break;
             case 2:
-                player = new Hero(playerName, 150, 85, 100);
+                player = new Hero(playerName, 180, 60, 15);
                 weapon = "bow";
                 break;
             case 3:
-                player = new Hero(playerName, 300, 50, 50);
+                player = new Hero(playerName, 250, 30, 22);
                 weapon = "war axe";
                 break;
             case 4:
@@ -47,13 +47,15 @@ public class GameLogic {
                 break;
         }
 
-        System.out.println("\nWelcome to [placeholder], " + playerName + "!");
+        System.out.println("\nWelcome to Nilgarf, " + playerName + "!");
         System.out.println("You wield a " + weapon + " as your weapon.");
 
         gameLoop(player, sc);
     }
     public void gameLoop(Hero player, Scanner sc){
         boolean isRunning = true;
+
+        if(!player.isAlive()) return;
 
         while(isRunning){
             System.out.println("Where do you want to go now? ");
@@ -102,11 +104,18 @@ public class GameLogic {
             if (random.nextBoolean()) {
                 Skeleton skelly = new Skeleton();
                 System.out.println("A bony Skeleton rattles toward you!");
+                skelly.encounter();
                 startCombat(player, skelly, sc);
-            } else {
+            } else if(random.nextBoolean()){
                 Goblin gobby = new Goblin();
                 System.out.println("A mischievous Goblin leaps from the shadows!");
+                gobby.encounter();
                 startCombat(player, gobby, sc);
+            } else{
+                Zombie zomby = new Zombie();
+                System.out.println("A creepy Zombie roars at you from behind!");
+                zomby.encounter();
+                startCombat(player, zomby, sc);
             }
         } else if(roll < 100 && roll > 80){
             System.out.println("You found a potion!");
@@ -123,9 +132,10 @@ public class GameLogic {
 
     public void startCombat(Hero player, Enemy enemy,Scanner sc){
         boolean inCombat = true;
-        System.out.println("--- Combat Started! ---");
+        
 
         while(inCombat) {
+            System.out.println("--- Combat Started! ---");
             System.out.println("Your HP: " + player.getHealth() + "\nYour Mana: " + player.getMana());
             System.out.println("What will you do? ");
             System.out.println("1. Attack\n2. Use Potion\n3. Flee");
@@ -133,24 +143,30 @@ public class GameLogic {
 
             switch (chc) {
                 case 1:
-                    System.out.println("You strike the enemy with your " + weapon);
-                    enemy.takeDamage(player.getAttack());
-                    System.out.println(enemy.getName() + " takes " + player.getAttack() + " damage!");
+                if(player.getMana()<=0){
+                    System.out.println("You don't have enough mana to fight!");
+                        enemyAttack(player, enemy);
+                        inCombat = player.checkIsAlive();
+                    break;
+                }
+                    playerAttack(player, enemy);
                     if (!enemy.isAlive()) {
-                        System.out.println("You have defeated the enemy!");
+                        enemy.deathCry();
                         System.out.println("You have gained a level!");
+                        player.increaseDMG(enemy.giveLevel());
                         totalEnemiesDefeated++;
                         inCombat = false;
                         break;
                     } else {
-                        System.out.println(enemy.getName() + " attacks you for " + enemy.getAttack() + "!");
-                        player.takeDamage(enemy.getAttack());
+                        enemyAttack(player, enemy);
+                        inCombat = player.checkIsAlive();
                     }
                     break;
                 case 2:
                     System.out.println("You used a potion! Recovering both your mana and hp!");
-                    System.out.println(enemy.getName() + " attacks you for " + enemy.getAttack() + "!");
-                    player.takeDamage(enemy.getAttack());
+                    //potion function here
+                    enemyAttack(player, enemy);
+                        inCombat = player.checkIsAlive();
                     break;
                 case 3:
                     System.out.println("You run!");
@@ -160,6 +176,19 @@ public class GameLogic {
             }
         }
     }
+
+    public void enemyAttack(Hero player, Enemy enemy){
+        System.out.println(enemy.getName() + " attacks you for " + enemy.getAttack() + "!");
+        player.takeDamage(enemy.getAttack());
+    }
+
+    public void playerAttack(Hero player, Enemy enemy){
+        System.out.println("You strike the enemy with your " + weapon);
+        player.reduceMana(10);
+        enemy.takeDamage(player.getAttack());
+        System.out.println(enemy.getName() + " takes " + player.getAttack() + " damage!");
+    }
+
     public void quitMessage(Hero player){
         System.out.println("--- Adventure Ended ---");
         System.out.println("      Statistics");

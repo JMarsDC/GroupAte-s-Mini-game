@@ -12,27 +12,19 @@ public class Character{
         this.attackDMG = attackDMG;
     }
 
-    public String getName(){
-        return name;
-    }
+    public String getName(){ return name; }
 
     public void setName(String name){ this.name = name; }
 
-    void takeDamage(int damage){
-        health -= damage;
-    }
+    public void takeDamage(int damage){ health -= damage; }
 
-    public int getHealth(){
-        return health;
-    }
+    public void reduceMana(int amount){ mana -= amount; }
 
-    public int getMana(){
-        return mana;
-    }
+    public int getHealth(){ return health; }
 
-    public int getAttack(){
-        return attackDMG;
-    }
+    public int getMana(){ return mana; }
+
+    public int getAttack(){ return attackDMG; }
 
     public void increaseHealth(int amount){ health += amount; }
 

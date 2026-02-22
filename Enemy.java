@@ -8,7 +8,7 @@ public class Enemy extends Character implements Voicelines{
     }
 
 // Drops Level so player gets more buffed
-    public float giveLevel(){
+    public int giveLevel(){
         return Level;
     }
 
@@ -19,12 +19,12 @@ public class Enemy extends Character implements Voicelines{
 
     @Override
     public void deathCry(){
-        System.out.print("NOOOO");
+        System.out.println("NOOOO");
     }
 
     @Override
     public void encounter(){
-        System.out.print("Hey There!");
+        System.out.println("Hey There!");
     }
 
     public float getLevel(){ return Level; }

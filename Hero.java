@@ -1,37 +1,37 @@
 public class Hero extends Character implements Voicelines{
     
-private int Level = 1; //plus 0.1 guro IDK
+private int Level = 1;
 
     Hero(String name, int health, int mana, int attackDMG){
         super(name,health,mana,attackDMG);
     }
 
-
-    public void addLevel(int Level){
-        this.Level += Level;
-    }
-
     //NOTE: when using this, type cast it liek this -> "(Hero)Steve.checkIsAlive();"
-    public void checkIsAlive(){
-        if(!isAlive()) deathCry();
+    public boolean checkIsAlive(){
+        if(!isAlive()){
+            deathCry();
+            return false;
+        }
         else encounter();
+
+        return true;
     }
 
 // This dude gets the base attack from Character but will override so that 
 // his damage can be scaled using levels
     @Override
     public int getAttack(){
-        return super.getAttack()*Level;
+        return super.getAttack();
     }
 
     @Override
     public void deathCry(){
-        System.out.print("RAAGHH");
+        System.out.println(super.getName() +": RAAGHH");
     }
 
     @Override
     public void encounter(){
-        System.out.print("Hola espanyol?");
+        System.out.println(super.getName() + ": Hola espanyol?");
     }
 
     public int getLevel(){ return Level; }
