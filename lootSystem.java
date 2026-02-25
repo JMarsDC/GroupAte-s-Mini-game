@@ -1,4 +1,4 @@
-public class lootSystem {
+/* public class lootSystem {
     public static Potion tryDrop(Potion potion){
         double roll = Math.random();
         if (roll < potion.getDropRate()) {
@@ -9,3 +9,4 @@ public class lootSystem {
     }
 
 }
+*/

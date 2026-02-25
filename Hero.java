@@ -1,6 +1,8 @@
 public class Hero extends Character implements Voicelines{
     
 private int Level = 1;
+private int maxMana = getMana();
+private int maxHealth = getHealth();
 
     Hero(String name, int health, int mana, int attackDMG){
         super(name,health,mana,attackDMG);
@@ -35,8 +37,21 @@ private int Level = 1;
     }
 
     public int getLevel(){ return Level; }
+    public void setLevel(int Level){ this.Level += Level;}
     public void recover(){
-        super.increaseHealth(50);
-        super.increaseMana(50);
+        if(getMana() >= maxMana && getHealth() >= maxHealth){
+            System.out.println("Puno imo hp og mana cuhhhhhhhhhhhhhhhhhhhhhhhh");
+        } else if(getMana() >= maxMana){
+            System.out.println("Di ka maka recover og mana cuh pero here oh imo hp +50");
+            increaseHealth(50);
+        } else if(getHealth() >= maxHealth){
+            System.out.println("Anga nimo uy kita kaayo ba puno imo hp, pero sige +50 lang imo mana");
+            increaseMana(50);
+        } else{
+            System.out.println("Maka heal naka yipppeedabitydoooo");
+            super.increaseHealth(50);
+            super.increaseMana(50);
+        }
+
     }
 }

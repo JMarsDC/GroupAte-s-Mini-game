@@ -8,6 +8,10 @@ public class GameLogic {
     private int totalSteps = 0;
     private Random random = new Random();
     private String weapon = "";
+    private manaPotion manaPot = new manaPotion();
+    private healthPotion healthPot = new healthPotion();
+    // index at 0 is mana index at 1 is hp
+    private final int potionBag[] = new int[2];
     // chooses between 0-2 and adds 5 to ensure a boss encounter by the nth step
     private int bossEncounter = random.nextInt(3) + 5;
     public void GAMESTARTOOOOO() {
@@ -47,7 +51,7 @@ public class GameLogic {
                 break;
         }
 
-        System.out.println("\nWelcome to Nilgarf, " + playerName + "!");
+        System.out.println("\nWelcome to [placeholder], " + playerName + "!");
         System.out.println("You wield a " + weapon + " as your weapon.");
 
         gameLoop(player, sc);
@@ -59,12 +63,10 @@ public class GameLogic {
 
         while(isRunning){
             System.out.println("Where do you want to go now? ");
-            System.out.println("1. Forward");
-            System.out.println("2. Backward");
-            System.out.println("3. Left");
-            System.out.println("4. Right");
-            System.out.println("5. Rest");
-            System.out.println("6. Quit");
+            System.out.println("1. Forward\t 4. Right");
+            System.out.println("2. Backward\t 5. Rest");
+            System.out.println("3. Left\t     6. Quit");
+
 
             int chc = sc.nextInt();
             switch(chc){
@@ -95,10 +97,12 @@ public class GameLogic {
             System.out.println("!!! A BOSS APPEARS !!!");
             resetBossEncounter();
             bossEnemy bossBabaji = new bossEnemy();
-            bossBabajiCombat(player, bossBabaji);
+            bossBabajiCombat(player, bossBabaji, sc);
             return;
         }
 
+        // roll chances to make sure that something happens in between steps
+        // 50/50 to meet an enemy 20% chance to see a potion and a 30% chance to not find anything at all
         if(roll < 50){
             System.out.println("An enemy appears!");
             if (random.nextBoolean()) {
@@ -117,8 +121,16 @@ public class GameLogic {
                 zomby.encounter();
                 startCombat(player, zomby, sc);
             }
-        } else if(roll < 100 && roll > 80){
+        } else if(roll <= 100 && roll >= 80){
             System.out.println("You found a potion!");
+            int fiftyfiftytypeshi = random.nextInt(100);
+            if(fiftyfiftytypeshi % 2 == 0){
+                System.out.println("kita kag mana potion cuh");
+                potionBag[0]++;
+            } else {
+                System.out.println("kita kag hp potion cuh");
+                potionBag[1]++;
+            }
         } else{
             System.out.println("The path is quiet....");
         }
@@ -132,11 +144,11 @@ public class GameLogic {
 
     public void startCombat(Hero player, Enemy enemy,Scanner sc){
         boolean inCombat = true;
-        
+
+        System.out.println("\n--- Combat Started! ---");
 
         while(inCombat) {
-            System.out.println("--- Combat Started! ---");
-            System.out.println("Your HP: " + player.getHealth() + "\nYour Mana: " + player.getMana());
+            System.out.println("Your HP: " + player.getHealth() + "\t\tYour Mana: " + player.getMana());
             System.out.println("What will you do? ");
             System.out.println("1. Attack\n2. Use Potion\n3. Flee");
             int chc = sc.nextInt();
@@ -155,6 +167,7 @@ public class GameLogic {
                         System.out.println("You have gained a level!");
                         player.increaseDMG(enemy.giveLevel());
                         totalEnemiesDefeated++;
+                        player.setLevel(enemy.getLevel());
                         inCombat = false;
                         break;
                     } else {
@@ -163,7 +176,7 @@ public class GameLogic {
                     }
                     break;
                 case 2:
-                    System.out.println("You used a potion! Recovering both your mana and hp!");
+                    potionUsage(player, sc);
                     //potion function here
                     enemyAttack(player, enemy);
                         inCombat = player.checkIsAlive();
@@ -199,7 +212,83 @@ public class GameLogic {
         System.out.println("\nThank you for playing this experience!");
     }
 
-    public void bossBabajiCombat(Hero player, bossEnemy bossBabaji){
+    public void bossBabajiCombat(Hero player, bossEnemy bossBabaji, Scanner sc){
+        boolean inCombat = true;
 
+        while(inCombat){
+            System.out.println("--- COMBAT WITH BOSSBABAJI ---");
+            System.out.println("Your HP: " + player.getHealth() + "\nYour Mana: " + player.getMana());
+            System.out.println("What will you do? ");
+            System.out.println("1. Attack\n2. Use Potion\n3. Flee");
+
+            int chc = sc.nextInt();
+            switch (chc) {
+                case 1:
+                    if(player.getMana() <= 0){
+                        System.out.println("You're out of mana cuh");
+                        System.out.println("You need to use a potion or rest and lose a turn!");
+                        enemyAttack(player, bossBabaji);
+                        inCombat = player.checkIsAlive();
+                    }
+                    playerAttack(player, bossBabaji);
+                    if(!bossBabaji.isAlive()){
+                        bossBabaji.deathCry();
+                        System.out.println("Imo na gi pildi ang pinakaisog cuh");
+                        System.out.println("Naka gain napud kag level type shiii +5 naka dong");
+                        player.increaseDMG(bossBabaji.giveLevel());
+                        totalEnemiesDefeated++;
+                        player.setLevel(bossBabaji.getLevel());
+                        inCombat = false;
+                        break;
+                    } else{
+                        enemyAttack(player, bossBabaji);
+                        inCombat = player.checkIsAlive();
+                    }
+                    break;
+                case 2:
+                    System.out.println("Nigamit ka og potion cuh imo mana og hp kay +points");
+                    enemyAttack(player, bossBabaji);
+                    inCombat = player.checkIsAlive();
+                    break;
+                case 3:
+                    System.out.println("You cannot run away from the bossbabajiiiiiiiiiii shawarma with rice!");
+                    System.out.println("You lose a turn!");
+                    enemyAttack(player, bossBabaji);
+                    break;
+            }
+        }
+    }
+
+    public void potionUsage(Hero player, Scanner sc){
+        System.out.println("Potion Bag:");
+        System.out.println("1. Mana Potion [" + potionBag[0] + "]");
+        System.out.println("2. Health Potion [" + potionBag[1] + "]");
+
+        int chc = sc.nextInt();
+        if(chc == 1){
+            if(isPotionBagEmpty(0)){
+                System.out.println("Potion Bag is out of Mana Potions!");
+                potionBag[0] = 0;
+            } else{
+                System.out.println("You used a Mana Potion!");
+                System.out.println("You only have " + potionBag[0] + " Mana Potions left!");
+                manaPot.applyEffect(player);
+            }
+
+        } else if(chc == 2){
+            if(isPotionBagEmpty(1)){
+                System.out.println("Potion Bag is out of Health Potions!");
+                potionBag[1] = 0;
+            } else{
+                System.out.println("You used a Health Potion");
+                System.out.println("You only have " + potionBag[1] + " Health Potions left!");
+                healthPot.applyEffect(player);
+            }
+        }
+    }
+
+    public boolean isPotionBagEmpty(int index){
+        potionBag[index]--;
+        return potionBag[index] < 0;
     }
 }

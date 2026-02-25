@@ -27,5 +27,5 @@ public class Enemy extends Character implements Voicelines{
         System.out.println("Hey There!");
     }
 
-    public float getLevel(){ return Level; }
+    public int getLevel(){ return Level; }
 }

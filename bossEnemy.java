@@ -1,6 +1,6 @@
 public class bossEnemy extends Enemy implements Voicelines{
 
-    private int phaseCount;
+    private int phaseCount = 2;
     static int health = 200;
     static int mana = 80;
     static int attackDMG = 20;
@@ -17,9 +17,15 @@ public class bossEnemy extends Enemy implements Voicelines{
     public void nextPhase() {
         if (phaseCount > 1) {
             System.out.println(getName() + " enters phase " + phaseCount + "!");
+            increaseHealth(50);
+            increaseMana(30);
             phaseCount--;
-        } else
+        } else{
             System.out.println(getName() + " enters their final phase!");
+            increaseHealth(30);
+            increaseMana(30);
+            increaseDMG(20);
+        }
     }
 
     @Override
